@@ -127,7 +127,9 @@ function fireball(cx: number, cy: number, s: number): void {
 }
 
 // Side-view jet silhouette. dir = 1 faces right, -1 faces left. s = size scale.
-function drawJet(cx: number, cy: number, dir: number, s: number): void {
+// c defaults to near-black JET (reads on light dusk bands); pass a lighter
+// steel tone when the jet must read against the dark upper sky.
+function drawJet(cx: number, cy: number, dir: number, s: number, c: RGB = JET): void {
   const shape: Array<[number, number]> = [
     [32, 0],
     [-24, -6],
@@ -142,7 +144,7 @@ function drawJet(cx: number, cy: number, dir: number, s: number): void {
     cx + dir * Math.round(dx * s),
     cy + Math.round(dy * s),
   ]);
-  fillPolygon(pts, JET);
+  fillPolygon(pts, c);
   fillCircle(cx - dir * Math.round(32 * s), cy, Math.max(2, Math.round(3 * s)), BLAST_O);
   fillCircle(cx - dir * Math.round(32 * s), cy, Math.max(1, Math.round(1 * s)), BLAST_Y);
 }
@@ -334,11 +336,12 @@ for (let x = 40; x < 984; x += 36) {
   const h = 8 + ((x * 13) % 9);
   fillPolygon([[x, 560], [x + 18, 560 - h], [x + 36, 560]], DARK);
 }
-// Two warplanes crossing the dusk sky, with contrails.
-line(296, 312, 210, 296, [110, 120, 140]);
-drawJet(330, 312, 1, 1);
-line(724, 348, 810, 336, [110, 120, 140]);
-drawJet(690, 348, -1, 1);
+// Two warplanes crossing the dusk sky, with contrails. Larger (1.4x) and
+// light steel so they actually read against the dark upper sky bands.
+line(285, 312, 200, 296, [110, 120, 140]);
+drawJet(330, 312, 1, 1.4, [148, 164, 196]);
+line(735, 348, 820, 336, [110, 120, 140]);
+drawJet(690, 348, -1, 1.4, [148, 164, 196]);
 
 // Hero body line: the claim caveat.
 drawText("CASUALTY FIGURES ARE HOUTHI CLAIMS - NOT INDEPENDENTLY VERIFIED", 512, 572, 1, GREY);
